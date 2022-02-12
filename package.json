@@ -2,12 +2,19 @@
   "name": "pleer",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "bootstrap": "lerna bootstrap",
+    "start": "lerna run start --parallel",
+    "setup": "npm install && npm run bootstrap",
+    "lint": "lerna run lint --parallel",
     "prepare": "husky install"
   },
-  "author": "",
+  "author": "Avanesyan Ashot",
   "license": "MIT",
   "devDependencies": {
     "commitizen": "^4.2.4",

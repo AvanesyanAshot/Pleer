@@ -12,6 +12,8 @@
     "start": "lerna run start --parallel",
     "setup": "npm install && npm run bootstrap",
     "lint": "lerna run lint --parallel",
+    "prettier": "prettier --ignore-path .gitignore \"**/*.+(js|jsx|ts|tsx|json|css)\"",
+    "format": "yarn prettier --write",
     "prepare": "husky install"
   },
   "author": "Avanesyan Ashot",
@@ -19,12 +21,22 @@
   "devDependencies": {
     "commitizen": "^4.2.4",
     "cz-conventional-changelog": "3.3.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.28.0",
     "husky": "^7.0.0",
-    "lerna": "^4.0.0"
+    "lerna": "^4.0.0",
+    "lint-staged": "^12.3.3",
+    "prettier": "^2.5.1"
   },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "lint-staged": {
+    "*.md": [
+      "yarn format"
+    ]
   }
 }

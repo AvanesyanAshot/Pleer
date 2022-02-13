@@ -5,7 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 @Module({
   imports: [
     MongooseModule.forRoot(
-      'mongodb+srv://admin:admin@pleer.a0hqn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+      'mongodb+srv://admin:admin@cluster0.utklh.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
     ),
     TrackModule,
   ],

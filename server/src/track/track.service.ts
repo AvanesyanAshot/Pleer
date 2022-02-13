@@ -2,8 +2,16 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class TrackService {
-  async create() {}
-  async getAll() {}
-  async getOne() {}
-  async delete() {}
+  async create() {
+    return 'create';
+  }
+  async getAll() {
+    return 'get all tracks';
+  }
+  async getOne() {
+    return 'getOne';
+  }
+  async delete() {
+    return 'delete';
+  }
 }

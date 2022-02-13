@@ -1,5 +1,13 @@
 import { TrackModule } from './track/track.module';
 import { Module } from '@nestjs/common';
+import { MongooseModule } from '@nestjs/mongoose';
 
-@Module({ imports: [TrackModule] })
+@Module({
+  imports: [
+    MongooseModule.forRoot(
+      'mongodb+srv://admin:admin@pleer.a0hqn.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+    ),
+    TrackModule,
+  ],
+})
 export class AppModule {}

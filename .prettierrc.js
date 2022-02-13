@@ -5,6 +5,7 @@ module.exports = {
   semi: true,
   trailingComma: 'all',
   arrowParens: 'always',
+  endOfLine: "auto",
   overrides: [
     {
       files: '*.{js,jsx,tsx,ts,scss,css,json,html}',

@@ -1,4 +1,4 @@
-import { CommentSchema } from './schemas/comment.schema';
+import { Comment, CommentSchema } from './schemas/comment.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Module } from '@nestjs/common';
 import { TrackService } from './track.service';

@@ -1,17 +1,42 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model, ObjectId } from 'mongoose';
+import { CreateTrackDto } from './dto/create-track.dto';
+import { Track, TrackDocument } from './schemas/track.schema';
 
 @Injectable()
 export class TrackService {
-  async create() {
-    return 'create';
+  logger: Logger;
+  constructor(
+    @InjectModel(Track.name) private trackModel: Model<TrackDocument>,
+  ) {
+    this.logger = new Logger();
   }
-  async getAll() {
-    return 'get all tracks';
+
+  async create(dto: CreateTrackDto): Promise<Track> {
+    const track = await this.trackModel.create({
+      ...dto,
+      listens: 0,
+    });
+    this.logger.log(`Трек ${track.artist} добавлен`);
+    return track;
   }
-  async getOne() {
-    return 'getOne';
+
+  async getAll(): Promise<Track[]> {
+    const tracks = await this.trackModel.find();
+
+    return tracks;
   }
-  async delete() {
-    return 'delete';
+
+  async getOne(id: ObjectId): Promise<Track> {
+    const track = await this.trackModel.findById(id);
+    return track;
+  }
+
+  async delete(id: ObjectId): Promise<ObjectId> {
+    const track = await this.trackModel.findByIdAndDelete(id);
+    this.logger.log(`Трек ${track.artist} был удален`);
+
+    return track._id;
   }
 }

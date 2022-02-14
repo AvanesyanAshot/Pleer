@@ -1,8 +1,9 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { UserDto } from './dto/user.dto';
-import { User, UserDocument } from './schemas/user.schema';
+import { UserDto } from '../dto/user.dto';
+import { User, UserDocument } from '../schemas/user.schema';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -11,13 +12,19 @@ export class UserService {
     this.logger = new Logger();
   }
   async registration(dto: UserDto) {
-    const candidate = await this.userModel.findOne(dto.email as any);
+    const { email, password, username } = dto;
+    this.logger.log(`${email} ${password} ${username}`);
+    const candidate = await this.userModel.findOne({ email });
     if (candidate) {
-      throw new Error(`User with this email ${dto.email} already exists `);
+      this.logger.error(`User with this email ${email} already exists`);
     }
+    const hashPassword = await bcrypt.hash(password, 3);
     const user = await this.userModel.create({
       ...dto,
+      password: hashPassword,
+      tracks: [],
     });
+    this.logger.log(`User ${username} successfully registered `);
     return user;
   }
   async login() {

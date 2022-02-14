@@ -35,6 +35,8 @@ export class TrackService {
 
   async delete(id: ObjectId): Promise<ObjectId> {
     const track = await this.trackModel.findByIdAndDelete(id);
+    this.logger.log(`Трек ${track.artist} был удален`);
+
     return track._id;
   }
 }

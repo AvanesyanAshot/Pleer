@@ -12,4 +12,5 @@ import { MongooseModule } from '@nestjs/mongoose';
     UserModule,
   ],
 })
+//TODO Добавить .env
 export class AppModule {}

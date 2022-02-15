@@ -13,7 +13,6 @@ export class UserService {
   }
   async registration(dto: UserDto) {
     const { email, password, username } = dto;
-    this.logger.log(`${email} ${password} ${username}`);
     const candidate = await this.userModel.findOne({ email });
     if (candidate) {
       this.logger.error(`User with this email ${email} already exists`);

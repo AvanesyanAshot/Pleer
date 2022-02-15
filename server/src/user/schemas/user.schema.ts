@@ -16,6 +16,12 @@ export class User {
   @Prop()
   password: string;
 
+  @Prop()
+  isActivated: boolean;
+
+  @Prop()
+  activationLink: boolean;
+
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Track' }] })
   tracks: Track[];
 }

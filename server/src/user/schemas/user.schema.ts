@@ -20,7 +20,7 @@ export class User {
   isActivated: boolean;
 
   @Prop()
-  activationLink: boolean;
+  activationLink: string;
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Track' }] })
   tracks: Track[];

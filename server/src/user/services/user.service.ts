@@ -6,7 +6,7 @@ import { User, UserDocument } from '../schemas/user.schema';
 import * as bcrypt from 'bcrypt';
 import { TokenService } from './token.service';
 import { MailService } from './mail.service';
-import uuid from 'uuid';
+import * as uuid from 'uuid';
 import { UserNoPasswordDto } from '../dto/userNoPassword.dto';
 
 @Injectable()

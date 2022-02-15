@@ -1,7 +1,7 @@
 import { Token, TokenDocument } from './../schemas/token.schema';
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import jwt from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 import { Model } from 'mongoose';
 
 @Injectable()

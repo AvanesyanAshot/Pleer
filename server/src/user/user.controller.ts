@@ -1,19 +1,32 @@
-import { Body, Controller, Get, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Post, Req, Res } from '@nestjs/common';
 import { UserDto } from './dto/user.dto';
 import { UserService } from './services/user.service';
+import { Response, Request } from 'express';
 
 @Controller('auth')
 export class UserController {
-  constructor(private UserService: UserService) {}
+  logger: Logger;
+
+  constructor(private UserService: UserService) {
+    this.logger = new Logger();
+  }
 
   @Post('registration')
   async registration(
     @Req() req: Request,
-    @Res() res: Response,
+    @Res({ passthrough: true }) res: Response,
     @Body() dto: UserDto,
   ) {
-    const userData = await this.UserService.registration(dto);
-    return this.UserService.registration(dto);
+    try {
+      const userData = await this.UserService.registration(dto);
+      res.cookie('refreshToken', userData.refreshToken, {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      });
+      return res.json(userData);
+    } catch (error) {
+      this.logger.error(error);
+    }
   }
 
   @Post('login')

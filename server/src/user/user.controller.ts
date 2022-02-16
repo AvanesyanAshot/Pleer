@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Logger, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Post, Res } from '@nestjs/common';
+import { Response } from 'express';
 import { UserDto } from './dto/user.dto';
 import { UserService } from './services/user.service';
-import { Response, Request } from 'express';
 
 @Controller('auth')
 export class UserController {
@@ -13,7 +13,6 @@ export class UserController {
 
   @Post('registration')
   async registration(
-    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
     @Body() dto: UserDto,
   ) {
@@ -23,9 +22,9 @@ export class UserController {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
       });
-      return res.json(userData);
+      return { msg: 'success' };
     } catch (error) {
-      this.logger.error(error);
+      throw error;
     }
   }
 

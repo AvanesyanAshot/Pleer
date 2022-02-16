@@ -33,7 +33,11 @@ export class UserService {
       activationLink,
       tracks: [],
     });
-    this.mailService.sendActivationMail(email, activationLink);
+
+    await this.mailService.sendActivationMail(
+      email,
+      `${process.env.API_URL}/api/activate/${activationLink}`,
+    );
     this.logger.log(`User ${username} successfully registered `);
     const userDto = new UserNoPasswordDto(user);
     const tokens = this.tokenService.generateToken({ ...userDto });

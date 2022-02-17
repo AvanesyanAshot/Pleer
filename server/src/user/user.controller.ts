@@ -1,7 +1,15 @@
-import { Body, Controller, Get, Logger, Post, Req, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Logger,
+  Param,
+  Post,
+  Res,
+} from '@nestjs/common';
+import { Response } from 'express';
 import { UserDto } from './dto/user.dto';
 import { UserService } from './services/user.service';
-import { Response, Request } from 'express';
 
 @Controller('auth')
 export class UserController {
@@ -11,9 +19,8 @@ export class UserController {
     this.logger = new Logger();
   }
 
-  @Post('registration')
+  @Post('/registration')
   async registration(
-    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
     @Body() dto: UserDto,
   ) {
@@ -23,9 +30,9 @@ export class UserController {
         maxAge: 30 * 24 * 60 * 60 * 1000,
         httpOnly: true,
       });
-      return res.json(userData);
+      return { msg: 'success' };
     } catch (error) {
-      this.logger.error(error);
+      throw error;
     }
   }
 
@@ -39,9 +46,18 @@ export class UserController {
     return this.UserService.logout();
   }
 
-  @Get('activate-link')
-  activateLink() {
-    return this.UserService.activateLink();
+  @Get('/activate/:link')
+  async activate(
+    @Res({ passthrough: true }) res: Response,
+    @Param('link') link: string,
+  ) {
+    try {
+      const activationLink = link;
+      await this.UserService.activate(activationLink);
+      return res.redirect(process.env.CLIENT_URL);
+    } catch (error) {
+      this.logger.error(error);
+    }
   }
 
   @Get('refresh')

@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Logger, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Logger,
+  Param,
+  Post,
+  Res,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { UserDto } from './dto/user.dto';
 import { UserService } from './services/user.service';
@@ -11,7 +19,7 @@ export class UserController {
     this.logger = new Logger();
   }
 
-  @Post('registration')
+  @Post('/registration')
   async registration(
     @Res({ passthrough: true }) res: Response,
     @Body() dto: UserDto,
@@ -38,9 +46,19 @@ export class UserController {
     return this.UserService.logout();
   }
 
-  @Get('activate-link')
-  activateLink() {
-    return this.UserService.activateLink();
+  @Get('/activate/:link')
+  async activate(
+    @Res({ passthrough: true }) res: Response,
+    @Param('link') link: string,
+  ) {
+    try {
+      const activationLink = link;
+      await this.UserService.activate(activationLink);
+      return res.redirect(process.env.CLIENT_URL);
+    } catch (error) {
+      this.logger.error(error);
+    }
+    return;
   }
 
   @Get('refresh')

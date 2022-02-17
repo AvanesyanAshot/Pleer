@@ -29,6 +29,7 @@ export class UserService {
     const activationLink = uuid.v4();
     const user = await this.userModel.create({
       ...dto,
+      isActivated: false,
       password: hashPassword,
       activationLink,
       tracks: [],
@@ -36,7 +37,7 @@ export class UserService {
 
     await this.mailService.sendActivationMail(
       email,
-      `${process.env.API_URL}/api/activate/${activationLink}`,
+      `${process.env.API_URL}/auth/activate/${activationLink}`,
     );
     this.logger.log(`User ${username} successfully registered `);
     const userDto = new UserNoPasswordDto(user);
@@ -50,8 +51,15 @@ export class UserService {
   async logout() {
     return 'login';
   }
-  async activateLink() {
-    return 'activateLink';
+
+  async activate(activationLink: string) {
+    const user = await this.userModel.findOne({ activationLink });
+    if (!user) {
+      throw new Error('Incorrect link');
+    }
+    user.isActivated = true;
+
+    await user.save();
   }
   async refresh() {
     return 'activateLink';

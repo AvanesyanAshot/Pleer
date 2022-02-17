@@ -58,7 +58,6 @@ export class UserController {
     } catch (error) {
       this.logger.error(error);
     }
-    return;
   }
 
   @Get('refresh')

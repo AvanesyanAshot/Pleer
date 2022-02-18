@@ -1,7 +1,9 @@
+import { AuthDto } from './dto/auth.dto';
 import {
   Body,
   Controller,
   Get,
+  HttpException,
   Logger,
   Param,
   Post,
@@ -37,8 +39,18 @@ export class UserController {
   }
 
   @Post('login')
-  login() {
-    return this.UserService.login();
+  async login(@Body() dto: AuthDto, @Res({ passthrough: true }) res: Response) {
+    try {
+      const userData = await this.UserService.login(dto);
+      res.cookie('refreshToken', userData.refreshToken, {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      });
+      return { msg: 'success' };
+    } catch (error) {
+      //TODO Сделать фильтр ошибок
+      throw new HttpException(error, 401);
+    }
   }
 
   @Post('logout')

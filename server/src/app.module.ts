@@ -3,7 +3,8 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { TrackModule } from './track/track.module';
 import { UserModule } from './user/user.module';
-
+import { APP_FILTER } from '@nestjs/core';
+import { HttpExceptionFilter } from './shared/http-exception.filter';
 @Module({
   imports: [
     ConfigModule.forRoot({ envFilePath: `.${process.env.NODE_ENV}.env` }),
@@ -12,6 +13,12 @@ import { UserModule } from './user/user.module';
     ),
     TrackModule,
     UserModule,
+  ],
+  providers: [
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
   ],
 })
 export class AppModule {}

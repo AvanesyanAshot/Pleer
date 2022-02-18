@@ -48,7 +48,6 @@ export class UserController {
       });
       return { msg: 'success' };
     } catch (error) {
-      //TODO Сделать фильтр ошибок
       throw new HttpException(error, 401);
     }
   }

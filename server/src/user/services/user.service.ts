@@ -8,6 +8,7 @@ import { TokenService } from './token.service';
 import { MailService } from './mail.service';
 import * as uuid from 'uuid';
 import { UserNoPasswordDto } from '../dto/userNoPassword.dto';
+import { AuthDto } from '../dto/auth.dto';
 
 @Injectable()
 export class UserService {
@@ -45,11 +46,24 @@ export class UserService {
     await this.tokenService.saveToken(userDto.id, tokens.refreshToken);
     return { ...tokens, user: userDto };
   }
-  async login() {
-    return 'login';
+  async login(dto: AuthDto) {
+    const { email, password } = dto;
+    const user = await this.userModel.findOne({ email });
+    if (!user) {
+      throw new Error('User with this email was not found ');
+    }
+    const isPassEquals = await bcrypt.compare(password, user.password);
+    if (!isPassEquals) {
+      throw new Error('Invalid password');
+    }
+    const userDto = new UserNoPasswordDto(user);
+    const tokens = this.tokenService.generateToken({ ...userDto });
+    await this.tokenService.saveToken(userDto.id, tokens.refreshToken);
+    return { ...tokens, user: userDto };
   }
-  async logout() {
-    return 'login';
+  async logout(refreshToken) {
+    const token = await this.tokenService.removeToken(refreshToken);
+    return token;
   }
 
   async activate(activationLink: string) {

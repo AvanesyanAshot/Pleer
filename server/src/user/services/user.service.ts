@@ -61,8 +61,9 @@ export class UserService {
     await this.tokenService.saveToken(userDto.id, tokens.refreshToken);
     return { ...tokens, user: userDto };
   }
-  async logout() {
-    return 'login';
+  async logout(refreshToken) {
+    const token = await this.tokenService.removeToken(refreshToken);
+    return token;
   }
 
   async activate(activationLink: string) {

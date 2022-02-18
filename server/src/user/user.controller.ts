@@ -1,17 +1,17 @@
-import { AuthDto } from './dto/auth.dto';
 import {
   Body,
   Controller,
   Get,
-  HttpCode,
   HttpException,
   HttpStatus,
   Logger,
   Param,
   Post,
+  Req,
   Res,
 } from '@nestjs/common';
-import { Response } from 'express';
+import { Request, Response } from 'express';
+import { AuthDto } from './dto/auth.dto';
 import { UserDto } from './dto/user.dto';
 import { UserService } from './services/user.service';
 
@@ -55,8 +55,15 @@ export class UserController {
   }
 
   @Post('logout')
-  logout() {
-    return this.UserService.logout();
+  async logout(@Res({ passthrough: true }) res: Response, @Req() req: Request) {
+    try {
+      const { refreshToken } = req.cookies;
+      await this.UserService.logout(refreshToken);
+      res.clearCookie('refreshToken');
+      return { msg: 'success' };
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.UNAUTHORIZED);
+    }
   }
 
   @Get('/activate/:link')

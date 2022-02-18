@@ -3,7 +3,9 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   HttpException,
+  HttpStatus,
   Logger,
   Param,
   Post,
@@ -48,7 +50,7 @@ export class UserController {
       });
       return { msg: 'success' };
     } catch (error) {
-      throw new HttpException(error, 401);
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
     }
   }
 

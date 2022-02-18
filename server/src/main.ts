@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 import { HttpExceptionFilter } from './shared/http-exception.filter';
+import { LoggingInterceptor } from './shared/logging.interceptor';
 
 const start = async () => {
   try {
@@ -10,6 +11,7 @@ const start = async () => {
     const app = await NestFactory.create(AppModule);
     app.useGlobalPipes(new ValidationPipe());
     app.useGlobalFilters(new HttpExceptionFilter());
+    app.useGlobalInterceptors(new LoggingInterceptor());
     app.use(cookieParser());
 
     app.enableCors();

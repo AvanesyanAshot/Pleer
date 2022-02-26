@@ -80,7 +80,14 @@ export class UserService {
       throw new Error('Unauthorized user');
     }
     const tokenFromDB = await this.tokenService.refreshToken(refreshToken);
-    return tokenFromDB;
+    if (!tokenFromDB) {
+      throw new Error('Unauthorized user');
+    }
+    const user = await this.userModel.findOne(refreshToken);
+    const userDto = new UserNoPasswordDto(user);
+    const tokens = this.tokenService.generateToken({ ...userDto });
+    await this.tokenService.saveToken(userDto.id, tokens.refreshToken);
+    return { ...tokens, user: userDto };
   }
   async users(): Promise<User[]> {
     return await this.userModel.find();

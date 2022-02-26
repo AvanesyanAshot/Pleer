@@ -41,4 +41,9 @@ export class TokenService {
     const tokenData = await this.tokenModel.deleteOne({ refreshToken });
     return tokenData;
   }
+
+  async refreshToken(refreshToken) {
+    const tokenData = await this.tokenModel.findOne({ refreshToken });
+    return tokenData;
+  }
 }

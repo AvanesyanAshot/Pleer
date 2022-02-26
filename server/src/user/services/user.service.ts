@@ -75,8 +75,12 @@ export class UserService {
 
     await user.save();
   }
-  async refresh() {
-    return 'activateLink';
+  async refresh(refreshToken) {
+    if (!refreshToken) {
+      throw new Error('Unauthorized user');
+    }
+    const tokenFromDB = await this.tokenService.refreshToken(refreshToken);
+    return tokenFromDB;
   }
   async users(): Promise<User[]> {
     return await this.userModel.find();

@@ -46,4 +46,28 @@ export class TokenService {
     const tokenData = await this.tokenModel.findOne({ refreshToken });
     return tokenData;
   }
+
+  validateAccessToken(token) {
+    try {
+      const userData = jwt.verify(
+        token,
+        process.env.JWT_ACCESS_ABSOLUTE_SECRET,
+      );
+      return userData as any;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  validateRefreshToken(token) {
+    try {
+      const userData = jwt.verify(
+        token,
+        process.env.JWT_REFRESH_ABSOLUTE_SECRET,
+      );
+      return userData as any;
+    } catch (e) {
+      return null;
+    }
+  }
 }

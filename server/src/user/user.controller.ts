@@ -81,8 +81,23 @@ export class UserController {
   }
 
   @Get('refresh')
-  refresh() {
-    return this.UserService.refresh();
+  async refresh(
+    @Body() dto: AuthDto,
+    @Res({ passthrough: true }) res: Response,
+    @Req() req: Request,
+  ) {
+    try {
+      const { refreshToken } = req.cookies;
+
+      const userData = await this.UserService.refresh(refreshToken);
+      res.cookie('refreshToken', userData as string, {
+        maxAge: 30 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+      });
+      return { msg: 'success' };
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.BAD_REQUEST);
+    }
   }
 
   @Get('users')
